@@ -64,8 +64,7 @@ router.post("/login", async (req, res) => {
 });
 
 router.get("/current", authJWT, (req, res) => {
-  res.json({
-    user: userDTO(req.user)
-  });
+  const safeUser = new UserDTO(req.user);
+  res.json({ user: safeUser });
 });
 export default router;

@@ -1,9 +1,9 @@
 
-export const userDTO = user => ({
-  id: user._id,
-  first_name: user.first_name,
-  last_name: user.last_name,
-  email: user.email,
-  age: user.age,
-  role: user.role
-})
+export default class UserDTO {
+  constructor(user) {
+    this.id = user._id;
+    this.name = `${user.first_name} ${user.last_name}`;
+    this.email = user.email;
+    this.role = user.role;
+  }
+}
