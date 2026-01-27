@@ -1,2 +1,2 @@
 
-export const jwtSecret = "coderSecretKey";
+export const jwtSecret = process.env.JWT_SECRET;

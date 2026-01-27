@@ -1,31 +1,35 @@
+
 import express from "express";
-import mongoose from "mongoose";
+import dotenv from "dotenv";
 import passport from "passport";
 
-import sessionsRouter from "./routes/sessions.router.js";
+import { connectDB } from "./config/database.js";
 import { initializePassport } from "./config/passport.config.js";
 
-const app = express();
-const PORT = 8080;
+import sessionsRouter from "./routes/sessions.router.js";
+import productsRouter from "./routes/products.router.js";
+import cartsRouter from "./routes/carts.router.js";
 
-/* ================== MIDDLEWARES ================== */
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT;
+
+/* MIDDLEWARES */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-/* ================== PASSPORT ================== */
+/* PASSPORT */
 initializePassport();
 app.use(passport.initialize());
 
-/* ================== ROUTES ================== */
+/* ROUTES */
 app.use("/api/sessions", sessionsRouter);
+app.use("/api/products", productsRouter);
+app.use("/api/carts", cartsRouter);
 
-/* ================== MONGODB ================== */
-mongoose
-  .connect("mongodb://localhost:27017/backend2")
-  .then(() => console.log("Conectado a MongoDB"))
-  .catch(err => console.error("Error MongoDB", err));
-
-/* ================== SERVER ================== */
+/* SERVER */
+connectDB();
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en puerto ${PORT}`);
 });

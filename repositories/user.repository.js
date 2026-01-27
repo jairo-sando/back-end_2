@@ -20,10 +20,8 @@ export default class UserRepository {
    }
 
 
-   updatePassword( id, passeword) {
-
-     return this.dao.updatePassword(id, password); 
-
-   }
+  updatePassword(id, password) {
+  return this.dao.updatePassword(id, password);
+}
 
 }

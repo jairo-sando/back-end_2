@@ -1,18 +1,21 @@
 
-import nodemailer from "nodemailer"; 
+import nodemailer from "nodemailer";
 
-export const sendRecoveryMail = async (email, token) => {
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASSWORD
+  }
+});
 
-    const link = `http://localhost:8080/reset-password?token=${token}`;
+/* ENVIAR MAIL  */
 
-  await  transporter.sendMail({
-    
-    to: email,
-    subject: "Recuperar contraseña",
-    html: `<a href="${link}">Restablecer contraseña</a>` 
-
-
-
+export const sendMail = async ({ to, subject, html }) => {
+  return await transporter.sendMail({
+    from: `Soporte <${process.env.MAIL_USER}>`,
+    to,
+    subject,
+    html
   });
-
 };

@@ -1,9 +1,22 @@
 
 import jwt from "jsonwebtoken";
 
-import { jwtSecret} from "../config/jwt.config.js";
+const JWT_SECRET = process.env.JWT_SECRET;
 
-export const generateResetToken = (email) =>
-  jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "1h" });
+/*  GENERAR TOKEN */
+
+export const generateToken = (user) => {
+  return jwt.sign(
+    {
+      id: user._id,
+      email: user.email,
+      role: user.role
+    },
+      process.env.JWT_SECRET,
+    {
+      expiresIn: "1h"
+    }
+  );
+};
 
 

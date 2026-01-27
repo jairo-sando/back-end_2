@@ -1,17 +1,17 @@
 
 import { Router } from "express";
-import { addProductToCart } from "../controllers/carts.controller.js";
+import { purchaseCart } from "../controllers/carts.controller.js";
 import { authJWT } from "../middlewares/auth.js";
 import { authorize } from "../middlewares/authorize.js";
 
 const router = Router();
 
-// USUARIO
+//  USUARIO 
 router.post(
-  "/:cid/product/:pid",
+  "/:cid/purchase",
   authJWT,
   authorize(["user"]),
-  addProductToCart
+  purchaseCart
 );
 
 export default router;

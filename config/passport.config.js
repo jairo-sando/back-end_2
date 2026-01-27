@@ -1,27 +1,23 @@
 
 import passport from "passport";
-import jwt from "passport-jwt";
+import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import { UserModel } from "../dao/models/user.model.js";
-import { jwtSecret } from "./jwt.config.js";
-
-const JWTStrategy = jwt.Strategy;
-const ExtractJWT = jwt.ExtractJwt;
 
 export const initializePassport = () => {
   passport.use(
     "jwt",
-    new JWTStrategy(
+    new JwtStrategy(
       {
-        jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-        secretOrKey: jwtSecret
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        secretOrKey: process.env.JWT_SECRET
       },
       async (jwt_payload, done) => {
         try {
-          const user = await UserModel.findById(jwt_payload.user.id);
+          const user = await UserModel.findById(jwt_payload.id);
           if (!user) return done(null, false);
           return done(null, user);
         } catch (error) {
-          return done(error);
+          return done(error, false);
         }
       }
     )
