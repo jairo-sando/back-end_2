@@ -10,7 +10,7 @@ const userRepository = new UserRepository();
 /* REGISTRO */
 export const register = async (req, res) => {
   try {
-    const { first_name, last_name, email, age, password } = req.body;
+    const { first_name, last_name, email, age, password, role } = req.body;
 
     const exists = await userRepository.getUserByEmail(email);
     if (exists) {
@@ -22,7 +22,8 @@ export const register = async (req, res) => {
       last_name,
       email,
       age,
-      password: createHash(password)
+      password: createHash(password),
+      role: role || "user"
     });
 
     res.status(201).json({ message: "Usuario registrado" });

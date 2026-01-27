@@ -6,6 +6,10 @@ export default class CartRepository {
     this.dao = new CartDAO();
   }
 
+  create(data) {
+    return this.dao.create(data);
+  }
+
   getById(id) {
     return this.dao.getById(id);
   }

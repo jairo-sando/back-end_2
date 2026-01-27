@@ -6,6 +6,10 @@ export default class ProductRepository {
     this.dao = new ProductDAO();
   }
 
+  getAll() {
+    return this.dao.getAll();
+  }
+
   getById(id) {
     return this.dao.getById(id);
   }
@@ -21,4 +25,5 @@ export default class ProductRepository {
   delete(id) {
     return this.dao.delete(id);
   }
-}
+};
+

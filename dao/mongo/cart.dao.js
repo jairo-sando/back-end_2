@@ -1,12 +1,15 @@
-
-import { CartModel } from "../models/cart.model.js";
+import CartModel from "../models/cart.model.js";
 
 export default class CartDAO {
-  getById(id) {
-    return CartModel.findById(id).populate("products.product");
+  async create(cart) {
+    return await CartModel.create(cart);
   }
 
-  update(id, data) {
-    return CartModel.findByIdAndUpdate(id, data, { new: true });
+  async getById(id) {
+    return await CartModel.findById(id).populate("products.product");
+  }
+
+  async update(id, data) {
+    return await CartModel.findByIdAndUpdate(id, data, { new: true });
   }
 }
