@@ -4,13 +4,14 @@ import UserDTO from "../dto/user.dto.js";
 import { createHash, isValidPassword } from "../utils/bcrypt.js";
 import { generateToken } from "../utils/jwt.js";
 import jwt from "jsonwebtoken";
+import { sendRecoveryMail } from "../utils/mailing.js";
 
 const userRepository = new UserRepository();
 
-/* REGISTRO */
+/* REGISTER */
 export const register = async (req, res) => {
   try {
-    const { first_name, last_name, email, age, password, role } = req.body;
+    const { first_name, last_name, email, age, password } = req.body;
 
     const exists = await userRepository.getUserByEmail(email);
     if (exists) {
@@ -23,7 +24,7 @@ export const register = async (req, res) => {
       email,
       age,
       password: createHash(password),
-      role: role || "user"
+      role: "user"
     });
 
     res.status(201).json({ message: "Usuario registrado" });
@@ -49,7 +50,7 @@ export const login = async (req, res) => {
   }
 };
 
-/* Current */
+/* CURRENT */
 export const current = async (req, res) => {
   try {
     const userDTO = new UserDTO(req.user);
@@ -59,12 +60,37 @@ export const current = async (req, res) => {
   }
 };
 
-/* Reset Pasword */
+/*  FORGOT PASSWORD */
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await userRepository.getUserByEmail(email);
+    if (!user) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    const token = generateToken(user); 
+    console.log("Token generado:", token);
+
+    await sendRecoveryMail(user.email, token);
+
+    res.json({ message: "Correo de recuperación enviado. Revisa tu bandeja de entrada." });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+/* RESET PASSWORD  */
 export const resetPassword = async (req, res) => {
   try {
     const { token, newPassword } = req.body;
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded || !decoded.email) {
+      return res.status(401).json({ error: "Token inválido o expirado" });
+    }
+
     const user = await userRepository.getUserByEmail(decoded.email);
 
     if (!user) {
@@ -87,3 +113,4 @@ export const resetPassword = async (req, res) => {
     res.status(401).json({ error: "Token inválido o expirado" });
   }
 };
+

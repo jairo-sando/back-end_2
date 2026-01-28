@@ -1,6 +1,10 @@
 
-import express from "express";
+import "./config/env.js";
 import dotenv from "dotenv";
+
+dotenv.config();
+
+import express from "express";
 import passport from "passport";
 
 import { connectDB } from "./config/database.js";
@@ -10,7 +14,6 @@ import sessionsRouter from "./routes/sessions.router.js";
 import productsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT;
